@@ -1,37 +1,30 @@
-from __future__ import division, absolute_import, with_statement, print_function
-from setuptools import setup, find_packages
-from torch.utils.cpp_extension import BuildExtension, CUDAExtension
+from setuptools import setup
+from torch.utils.cpp_extension import CUDAExtension, BuildExtension
 import glob
+import os
 
-try:
-    import builtins
-except:
-    import __builtin__ as builtins
+# setup.py directory
+ROOT = os.path.dirname(__file__)
 
-builtins.__POINTNET2_SETUP__ = True
-import pointnet2
+EXT_REL = os.path.join("pointnet2", "_ext-src")
+EXT_ABS = os.path.join(ROOT, EXT_REL)
 
-_ext_src_root = "pointnet2/_ext-src"
-_ext_sources = glob.glob("{}/src/*.cpp".format(_ext_src_root)) + glob.glob(
-    "{}/src/*.cu".format(_ext_src_root)
+sources = (
+    glob.glob(os.path.join(EXT_REL, "src", "*.cpp")) +
+    glob.glob(os.path.join(EXT_REL, "src", "*.cu"))
 )
-_ext_headers = glob.glob("{}/include/*".format(_ext_src_root))
-
-requirements = ["etw_pytorch_utils==1.1.1", "h5py", "enum34", "future"]
 
 setup(
-    name="pointnet2",
-    version=pointnet2.__version__,
-    author="Erik Wijmans",
-    packages=find_packages(),
-    install_requires=requirements,
     ext_modules=[
         CUDAExtension(
             name="pointnet2._ext",
-            sources=_ext_sources,
+            sources=sources,                 # RELATIVE paths (required)
+            include_dirs=[
+                os.path.join(EXT_ABS, "include"),  # ABSOLUTE paths (allowed)
+            ],
             extra_compile_args={
-                "cxx": ["-O2", "-I{}".format("{}/include".format(_ext_src_root))],
-                "nvcc": ["-O2", "-I{}".format("{}/include".format(_ext_src_root))],
+                "cxx": ["-O2"],
+                "nvcc": ["-O2"],
             },
         )
     ],

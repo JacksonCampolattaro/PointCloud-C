@@ -1,0 +1,30 @@
+[project]
+name = "pointnet2"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    # "torch>=2.9.1",
+    "numpy"
+]
+
+[build-system]
+requires = ["setuptools", "wheel", "torch>=2.9", "numpy"]
+build-backend = "setuptools.build_meta"
+
+
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-helpers-namespace",
+]
+
+[tool.setuptools]
+packages = { find = {} }
+
+[tool.setuptools.dynamic]
+version = { attr = "pointnet2.__version__" }
+
+[tool.setuptools.cmdclass]
+build_ext = "torch.utils.cpp_extension.BuildExtension"
+
