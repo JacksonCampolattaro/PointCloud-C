@@ -96,7 +96,7 @@ def train(args, io):
             # for new augmentation code, remove squeeze because it will be applied after augmentation.
             # default from baseline model, scale, shift, shuffle was default augmentation
             if args.rot or args.rdscale or args.shift or args.jitter or args.shuffle or args.rddrop or (
-                    args.beta is not 0.0):
+                    args.beta != 0.0):
                 data = data.cpu().numpy()
             if args.rot:
                 data = provider.rotate_point_cloud(data)
@@ -120,7 +120,7 @@ def train(args, io):
                 data, lam, label, label_b = rsmix_provider.rsmix(data, label, beta=args.beta, n_sample=args.nsample,
                                                                  KNN=args.knn)
             if args.rot or args.rdscale or args.shift or args.jitter or args.shuffle or args.rddrop or (
-                    args.beta is not 0.0):
+                    args.beta != 0.0):
                 data = torch.FloatTensor(data)
             if rsmix:
                 lam = torch.FloatTensor(lam)

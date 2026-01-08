@@ -245,14 +245,14 @@ def save_checkpoint(id, epoch, model, optimizer, lr_sched, bnm_sched, test_perf,
 
 def load_best_checkpoint(model, cfg):
     path = f"./runs/{cfg.EXP.EXP_ID}/model_best.pth"
-    checkpoint = torch.load(path)
+    checkpoint = torch.load(path, weights_only=False)
     model.load_state_dict(checkpoint['model_state'])
     print('Checkpoint loaded from %s' % path)
 
 
 def load_model_opt_sched(model, optimizer, lr_sched, bnm_sched, model_path):
     print(f'Recovering model and checkpoint from {model_path}')
-    checkpoint = torch.load(model_path)
+    checkpoint = torch.load(model_path, weights_only=False)
     try:
         model.load_state_dict(checkpoint['model_state'])
     except:
@@ -325,7 +325,6 @@ def get_optimizer(optim_name, tr_arg, model):
             mode='min',
             factor=tr_arg.lr_decay_factor,
             patience=tr_arg.lr_reduce_patience,
-            verbose=True,
             min_lr=tr_arg.lr_clip)
         bnm_sched = None
     else:
@@ -458,7 +457,7 @@ def entry_test_corrupt(cfg, model_path=""):
 
 def rscnn_vote_evaluation(cfg, model_path, log_file):
     model = get_model(cfg)
-    checkpoint = torch.load(model_path)
+    checkpoint = torch.load(model_path, weights_only=False)
     try:
         model.load_state_dict(checkpoint['model_state'])
     except:
@@ -487,7 +486,7 @@ def pn2_vote_evaluation(cfg, model_path, log_file):
     loader_test = create_dataloader(split='test', cfg=cfg)
 
     model = get_model(cfg)
-    checkpoint = torch.load(model_path)
+    checkpoint = torch.load(model_path, weights_only=False)
     try:
         model.load_state_dict(checkpoint['model_state'])
     except:

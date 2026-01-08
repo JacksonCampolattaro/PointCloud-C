@@ -1,7 +1,7 @@
 import tensorboardX
 import pdb
 import sys
-from collections import MutableMapping, Hashable
+from collections.abc import MutableMapping, Hashable
 import csv
 import os
 import torch
@@ -122,8 +122,11 @@ class PerfTrackVal:
     def agg(self):
         if self.task in ['cls', 'cls_trans']:
             perf = {
-                'acc': self.get_avg_list(self.all),
-                'class_acc': np.mean(np.array(self.class_corr) / np.array(self.class_seen,dtype=np.float))
+                "acc": self.get_avg_list(self.all),
+                "class_acc": np.mean(
+                    np.array(self.class_corr)
+                    / np.array(self.class_seen, dtype=float)
+                ),
             }
         else:
             assert False

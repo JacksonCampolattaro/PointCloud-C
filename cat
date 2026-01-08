@@ -6,9 +6,6 @@
 *.t7
 *.log
 *.pyc
-*.ninja
-*.o
-zoo/data
-zoo/runs
-zoo/checkpoints
+*.ninja*
+
 
